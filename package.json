@@ -1,0 +1,9 @@
+{
+  "name": "online-parking-system",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "serve .",
+    "build": "echo No build step needed"
+  }
+}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MS Galaxy Mall - Vehicle Parking System</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Top Navigation Bar -->
+  <nav class="top-navbar">
+    <div class="nav-brand">
+      <svg class="nav-logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" />
+        <path d="M9 16L12 8L15 16M10.5 13H13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+      <span class="brand-name">MS Mall</span>
+    </div>
+    <div class="nav-actions">
+      <button id="btn-admin-records" class="btn-nav">Admin Records</button>
+      <button id="btn-logout" class="btn-nav danger hidden">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal hidden">
+    <div class="modal-content login-card">
+      <button class="close-btn" id="close-login">&times;</button>
+      <h2>Admin Login</h2>
+      <form id="login-form">
+        <div class="form-group">
+          <input type="text" id="admin-username" placeholder="Username" required>
+        </div>
+        <div class="form-group">
+          <input type="password" id="admin-password" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn-primary">Login</button>
+      </form>
+      <div id="login-alert" class="ui-alert hidden"></div>
+    </div>
+  </div>
+
+  <div class="app-container" id="main-dashboard">
+    <header class="mall-header">
+      <h1>MS Galaxy Mall <span>Parking Management</span></h1>
+      <div class="live-status">
+        <div class="status-badge cars">
+          <span class="icon">🚗</span> Cars: <span id="cars-counter">0/45</span>
+        </div>
+        <div class="status-badge bikes">
+          <span class="icon">🏍️</span> Bikes: <span id="bikes-counter">0/50</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <!-- Entry Form Panel -->
+      <section class="panel entry-panel">
+        <h2>Register Vehicle</h2>
+        <form id="entry-form">
+          <div class="form-group">
+            <label for="vehicle-type">Vehicle Type</label>
+            <select id="vehicle-type" required>
+              <option value="car">Car (30 RS/hr)</option>
+              <option value="bike">Bike (15 RS/hr)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="mobile-no">Mobile Number</label>
+            <input type="text" id="mobile-no" placeholder="10-digit mobile number" pattern="^\d{10}$" required>
+          </div>
+          <div class="form-group">
+            <label for="vehicle-no">Vehicle Number</label>
+            <input type="text" id="vehicle-no" placeholder="e.g. TN-00-XX-0000" required>
+          </div>
+          <div class="form-group">
+            <label for="gov-id">Goverment ID</label>
+            <input type="text" id="gov-id" placeholder="ID Number" required>
+          </div>
+          <button type="submit" class="btn-primary">Allocate Slot</button>
+        </form>
+        <div id="alert-container"></div>
+      </section>
+
+      <!-- Slot Grid Panel -->
+      <section class="panel grid-panel">
+        <div class="grid-tabs">
+          <button class="tab-btn active" data-target="cars-grid">Cars (C1-C45)</button>
+          <button class="tab-btn" data-target="bikes-grid">Bikes (B1-B50)</button>
+        </div>
+        <div class="grid-container">
+          <div id="cars-grid" class="slot-grid active">
+            <!-- Rendered via JS -->
+          </div>
+          <div id="bikes-grid" class="slot-grid">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Admin Dashboard Container -->
+  <div class="app-container hidden" id="admin-dashboard">
+    <header class="mall-header">
+      <h1>MS Galaxy Mall <span>Admin Records</span></h1>
+      <div class="live-status">
+        <div class="status-badge valid">
+          <span class="icon">💰</span> Today's Revenue: <span id="total-revenue">0 RS</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section class="panel full-width">
+        <h2>Parking History Logs</h2>
+        <div class="table-container">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Vehicle Type</th>
+                <th>Slot</th>
+                <th>Vehicle No</th>
+                <th>Mobile No</th>
+                <th>Govt ID</th>
+                <th>Entry Time</th>
+                <th>Exit Time</th>
+                <th>Duration</th>
+                <th>Amount Paid</th>
+              </tr>
+            </thead>
+            <tbody id="history-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+          <div id="no-history-msg" class="empty-state">No transaction history found for today.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Receipt Modal -->
+  <div id="receipt-modal" class="modal hidden">
+    <div class="modal-content receipt-card">
+      <button class="close-btn" id="close-modal">&times;</button>
+      <div class="receipt-header">
+        <h2>MS Galaxy Mall</h2>
+        <p>Parking Receipt</p>
+      </div>
+      <div class="receipt-body">
+        <div class="receipt-row"><span>Slot:</span> <strong id="receipt-slot"></strong></div>
+        <div class="receipt-row"><span>Vehicle No:</span> <strong id="receipt-vehicle"></strong></div>
+        <div class="receipt-row"><span>Duration:</span> <strong id="receipt-duration"></strong></div>
+        <div class="receipt-row"><span>Rate:</span> <strong id="receipt-rate"></strong></div>
+        <div class="receipt-divider"></div>
+        <div class="receipt-row total"><span>Total Amount:</span> <strong id="receipt-total"></strong></div>
+      </div>
+      <div class="receipt-footer">
+        <p>Thank you for visiting!</p>
+        <button class="btn-secondary" id="print-receipt">Print Receipt</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+
+</html>
